@@ -14,8 +14,8 @@
 
   "regexManagers": [
     {
-      "fileMatch": [ "^build\\.sh$" ],
-      "matchStrings": [ "VERSION=(?<currentValue>.*)" ],
+      "fileMatch": [ "^Dockerfile$" ],
+      "matchStrings": [ "QEMU_VERSION=(?<currentValue>.*)" ],
       "depNameTemplate": "qemu/qemu",
       "datasourceTemplate": "github-tags",
       "extractVersionTemplate": "^v(?<version>.+?)$"

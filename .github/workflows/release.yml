@@ -15,21 +15,24 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Build
+        env:
+          DOCKER_BUILDKIT: 1
         run: |
-          bash build.sh
+          docker build . --output type=local,dest=.
           ls -l
 
       - name: Get version
         id: get_version
         run: |
-          VERSION="$(./qemu-img --version | grep qemu-img | cut -d' ' -f3)"
+          VERSION="$(./usr/local/bin/qemu-img --version | grep qemu-img | cut -d' ' -f3)"
+          test -n "${VERSION}"
           echo "qemu version ${VERSION}"
           echo "::set-output name=version::${VERSION}"
 
       - name: Create release asset
         run: |
           cd usr/local
-          tar -cvzf qemu.tar.gz
+          tar -cvzf qemu.tar.gz .
 
       - name: Create release
         id: create_release
