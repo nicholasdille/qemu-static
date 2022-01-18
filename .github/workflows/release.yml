@@ -19,7 +19,6 @@ jobs:
           DOCKER_BUILDKIT: 1
         run: |
           docker build . --output type=local,dest=.
-          ls -l
 
       - name: Get version
         id: get_version
