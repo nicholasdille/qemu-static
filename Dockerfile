@@ -11,7 +11,7 @@ RUN apt-get update \
         libfdt-dev \
         libpixman-1-dev \
         zlib1g-dev \
- && rm /usr/local/bin/unminimize
+ && rm /usr/local/sbin/unminimize
 
 ARG QEMU_VERSION=6.2.0
 ARG TARGETS="aarch64-softmmu x86_64-softmmu"
