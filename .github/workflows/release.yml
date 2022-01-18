@@ -38,7 +38,7 @@ jobs:
         if: github.event_name != 'pull_request'
         uses: ncipollo/release-action@v1
         with:
-          #token: ${{ secrets.BOT_GITHUB_TOKEN }}
+          token: ${{ secrets.BOT_GITHUB_TOKEN }}
           allowUpdates: true
           name: "qemu ${{ steps.get_version.outputs.version }}"
           tag: v${{ steps.get_version.outputs.version }}
