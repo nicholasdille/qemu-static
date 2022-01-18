@@ -31,8 +31,7 @@ jobs:
 
       - name: Create release asset
         run: |
-          cd usr/local
-          tar -cvzf qemu.tar.gz .
+          tar -cvzf qemu.tar.gz usr/local
 
       - name: Create release
         id: create_release
