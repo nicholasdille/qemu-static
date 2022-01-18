@@ -1,0 +1,47 @@
+name: build-static
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  build-static:
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Build
+        run: |
+          bash build.sh
+          ls -l
+
+      - name: Get version
+        id: get_version
+        run: |
+          VERSION="$(./qemu-img --version | grep qemu-img | cut -d' ' -f3)"
+          echo "qemu version ${VERSION}"
+          echo "::set-output name=version::${VERSION}"
+
+      - name: Create release asset
+        run: |
+          cd usr/local
+          tar -cvzf qemu.tar.gz
+
+      - name: Create release
+        id: create_release
+        if: github.event_name != 'pull_request'
+        uses: ncipollo/release-action@v1
+        with:
+          #token: ${{ secrets.BOT_GITHUB_TOKEN }}
+          allowUpdates: true
+          name: "qemu ${{ steps.get_version.outputs.version }}"
+          tag: v${{ steps.get_version.outputs.version }}
+          draft: false
+          omitBody: true
+          prerelease: false
+          replacesArtifacts: true
+          artifacts: qemu.tar.gz

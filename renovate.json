@@ -1,0 +1,31 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:base"
+  ],
+
+  "enabledManagers": [ "regex" ],
+
+  "major":  { "labels": ["type/renovate", "bump/major"] },
+  "minor":  { "labels": ["type/renovate", "bump/minor"] },
+  "patch":  { "labels": ["type/renovate", "bump/patch"] },
+  "pin":    { "labels": ["type/renovate", "bump/pin"] },
+  "digest": { "labels": ["type/renovate", "bump/digest"] },
+
+  "regexManagers": [
+    {
+      "fileMatch": [ "^build\\.sh$" ],
+      "matchStrings": [ "VERSION=(?<currentValue>.*)" ],
+      "depNameTemplate": "qemu/qemu",
+      "datasourceTemplate": "github-tags",
+      "extractVersionTemplate": "^v(?<version>.+?)$"
+    }
+  ],
+
+  "packageRules": [
+    {
+      "updateTypes": ["pin", "digest", "patch", "minor", "major"],
+      "automerge": true
+    }
+  ]
+}
