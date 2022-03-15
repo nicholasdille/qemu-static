@@ -7,30 +7,60 @@ on:
   pull_request:
 
 jobs:
-  build-static:
+
+  build:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        arch:
+          - amd64
+          - arm64
     steps:
 
       - name: Checkout
         uses: actions/checkout@v2
 
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
       - name: Build
         env:
           DOCKER_BUILDKIT: 1
         run: |
-          docker build . --output type=local,dest=.
+          docker build . \
+              --platform linux/${{ matrix.arch }} \
+              --output type=local,dest=.
+
+      - name: Create release asset
+        run: |
+          tar -cvzf qemu-${{ matrix.arch }}.tar.gz usr/local
+
+      - name: Store tarball
+        uses: actions/upload-artifact@v3
+        with:
+          name: qemu-${{ matrix.arch }}.tar.gz
+          path: qemu-${{ matrix.arch }}.tar.gz
+
+  release:
+    if: github.event_name != 'pull_request'
+    needs:
+    - build
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Checkout
+        uses: actions/checkout@v2
+    
+      - uses: actions/download-artifact@v3  
 
       - name: Get version
         id: get_version
         run: |
-          VERSION="$(./usr/local/bin/qemu-img --version | grep qemu-img | cut -d' ' -f3)"
-          test -n "${VERSION}"
-          echo "qemu version ${VERSION}"
-          echo "::set-output name=version::${VERSION}"
-
-      - name: Create release asset
-        run: |
-          tar -cvzf qemu.tar.gz usr/local
+          version="$(cat Dockerfile | grep "ARG QEMU_VERSION=" | sed -E 's/ARG QEMU_VERSION=//')"
+          echo "::set-output name=version::${version}"
 
       - name: Create release
         id: create_release
@@ -45,4 +75,4 @@ jobs:
           omitBody: true
           prerelease: false
           replacesArtifacts: true
-          artifacts: qemu.tar.gz
+          artifacts: "*/qemu-*.tar.gz"
