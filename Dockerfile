@@ -13,7 +13,7 @@ RUN apt-get update \
         zlib1g-dev \
  && rm /usr/local/sbin/unminimize
 
-ARG QEMU_VERSION=6.2.0
+ARG QEMU_VERSION=7.0.0
 ARG TARGETS="aarch64-softmmu x86_64-softmmu"
 WORKDIR /tmp/qemu
 RUN git clone -q --config advice.detachedHead=false --depth 1 --branch "v${QEMU_VERSION}" https://github.com/qemu/qemu .
