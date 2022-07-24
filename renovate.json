@@ -4,8 +4,6 @@
     "config:base"
   ],
 
-  "enabledManagers": [ "regex" ],
-
   "major":  { "labels": ["type/renovate", "bump/major"] },
   "minor":  { "labels": ["type/renovate", "bump/minor"] },
   "patch":  { "labels": ["type/renovate", "bump/patch"] },
