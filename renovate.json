@@ -1,14 +1,32 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
-    "config:base"
+    "config:base",
+    
+    ":label(type/renovate)",
+
+    ":docker",
+    "docker:enableMajor",
+    "docker:pinDigests",
+
+    ":disableRateLimiting",
+    ":ignoreUnstable",
+    ":pinVersions",
+    ":separateMajorReleases",
+    ":automergePr",
+    ":automergeRequireAllStatusChecks",
+    ":automergeAll",
+    ":semanticCommits",
+    
+    ":enableVulnerabilityAlerts",
+    ":enableVulnerabilityAlertsWithLabel(security)"
   ],
 
-  "major":  { "labels": ["type/renovate", "bump/major"] },
-  "minor":  { "labels": ["type/renovate", "bump/minor"] },
-  "patch":  { "labels": ["type/renovate", "bump/patch"] },
-  "pin":    { "labels": ["type/renovate", "bump/pin"] },
-  "digest": { "labels": ["type/renovate", "bump/digest"] },
+  "major":  { "labels": ["bump/major"] },
+  "minor":  { "labels": ["bump/minor"] },
+  "patch":  { "labels": ["bump/patch"] },
+  "pin":    { "labels": ["bump/pin"] },
+  "digest": { "labels": ["bump/digest"] },
 
   "regexManagers": [
     {
@@ -17,13 +35,13 @@
       "depNameTemplate": "qemu/qemu",
       "datasourceTemplate": "github-tags",
       "extractVersionTemplate": "^v(?<version>.+?)$"
-    }
-  ],
-
-  "packageRules": [
+    },
     {
-      "updateTypes": ["pin", "digest", "patch", "minor", "major"],
-      "automerge": true
+      "fileMatch": ["(^|/|\\.)Dockerfile[^/]*$"],
+      "matchStrings": [
+        "#syntax=(?<depName>.*?):(?<currentValue>.*?)\\n"
+      ],
+      "datasourceTemplate": "docker"
     }
   ]
 }
