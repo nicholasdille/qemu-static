@@ -1,6 +1,6 @@
 #syntax=docker/dockerfile:1.4.0
 
-FROM ubuntu:20.04 AS build
+FROM ubuntu:20.04@sha256:fd92c36d3cb9b1d027c4d2a72c6bf0125da82425fc2ca37c414d4f010180dc19 AS build
 
 ENV DEBIAN_FRONTEND=non-interactive
 RUN apt-get update \
