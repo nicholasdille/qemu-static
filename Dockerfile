@@ -1,3 +1,5 @@
+#syntax=docker/dockerfile:1.4.0
+
 FROM ubuntu:20.04 AS build
 
 ENV DEBIAN_FRONTEND=non-interactive
